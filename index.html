@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDraft - AI-Powered PDF Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome to PDraft</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="signup">Sign Up</button>
+                </div>
+                
+                <div id="loginTab" class="tab-content active">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <input type="email" id="loginEmail" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="loginPassword" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="auth-btn">Login</button>
+                    </form>
+                    <div class="divider">or</div>
+                    <button id="googleLogin" class="google-btn">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </button>
+                </div>
+                
+                <div id="signupTab" class="tab-content">
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <input type="email" id="signupEmail" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="signupPassword" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                        </div>
+                        <button type="submit" class="auth-btn">Sign Up</button>
+                        <p class="signup-bonus">🎉 Get 250,000 free tokens upon registration!</p>
+                    </form>
+                    <div class="divider">or</div>
+                    <button id="googleSignup" class="google-btn">
+                        <i class="fab fa-google"></i> Sign up with Google
+                    </button>
+                </div>
+                
+                <!-- Guest Mode Section -->
+                <div class="guest-mode-section">
+                    <div class="divider">or</div>
+                    <button id="continueAsGuest" class="guest-btn">
+                        <i class="fas fa-user-clock"></i> Continue without registration
+                        <span class="guest-tokens">Get 50,000 free tokens</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDraft</span>
+                </div>
+                <button id="newChatBtn" class="new-chat-btn">
+                    <i class="fas fa-plus"></i> New Document
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span id="userName">User</span>
+                        <div class="token-info">
+                            <span id="tokenCount">250,000</span> tokens
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="history-section">
+                    <h3>Recent Documents</h3>
+                    <div id="historyList" class="history-list">
+                        <!-- History items will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button id="settingsBtn" class="settings-btn">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h1>Create Professional PDF Documents</h1>
+                    <p>Describe your document and let AI generate a professional PDF for you</p>
+                </div>
+                
+                <div id="chatMessages" class="chat-messages">
+                    <!-- Chat messages will appear here -->
+                </div>
+                
+                <div class="input-container">
+                    <div class="input-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="documentTitle">Document Title</label>
+                                <input type="text" id="documentTitle" placeholder="Enter document title..." maxlength="200">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="documentDescription">Document Description</label>
+                                <textarea id="documentDescription" placeholder="Describe your document in detail. Include structure, content, formatting requirements, and any specific elements you want..." rows="6"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button id="clearChatBtn" class="clear-btn">
+                                <i class="fas fa-trash"></i> Clear Chat
+                            </button>
+                            <button id="generateBtn" class="generate-btn">
+                                <i class="fas fa-magic"></i> Generate PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Font Settings</h3>
+                    <div class="setting-group">
+                        <label for="fontStyle">Font Style</label>
+                        <select id="fontStyle">
+                            <option value="times">Times New Roman</option>
+                            <option value="arial">Arial</option>
+                            <option value="helvetica">Helvetica</option>
+                            <option value="computer-modern">Computer Modern</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="fontSize">Font Size</label>
+                        <select id="fontSize">
+                            <option value="10pt">10pt</option>
+                            <option value="11pt">11pt</option>
+                            <option value="12pt" selected>12pt</option>
+                            <option value="14pt">14pt</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Document Settings</h3>
+                    <div class="setting-group">
+                        <label for="language">Language</label>
+                        <select id="language">
+                            <option value="english">English</option>
+                            <option value="spanish">Spanish</option>
+                            <option value="french">French</option>
+                            <option value="german">German</option>
+                            <option value="chinese">Chinese</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="documentType">Document Type</label>
+                        <select id="documentType">
+                            <option value="research-paper">Research Paper</option>
+                            <option value="report">Report</option>
+                            <option value="qa">Q&A Document</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>AI Settings</h3>
+                    <div class="setting-group">
+                        <label for="maxTokens">Max Tokens</label>
+                        <input type="range" id="maxTokens" min="1000" max="10000" value="4000" step="500">
+                        <span id="maxTokensValue">4000</span>
+                    </div>
+                </div>
+                
+                <div class="settings-actions">
+                    <button id="saveSettings" class="save-btn">Save Settings</button>
+                    <button id="resetSettings" class="reset-btn">Reset to Default</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p id="loadingText">Generating your PDF...</p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
