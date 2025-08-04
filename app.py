@@ -19,7 +19,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuration
-DEEPSEEK_API_KEY = "sk-64ddb82e1d034a87acb26ce2a0d629ff"
+DEEPSEEK_API_KEY = "sk-b1a9cd38bb9a490f8c766b2bc356a9ff"
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
 
 # Create directories for PDFs (temp files are handled by tempfile.mkdtemp)
